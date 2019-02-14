@@ -1,0 +1,36 @@
+[build-system]
+requires = ["flit"]
+build-backend = "flit.buildapi"
+
+[tool.flit.metadata]
+module = "prybar"
+author = "Hal Blackburn"
+author-email = "hwtb2@cam.ac.uk"
+classifiers = ["License :: OSI Approved :: MIT License"]
+
+[tool.flit.metadata.requires-extra]
+dev = [
+    "flake8",
+]
+test = [
+    "pytest",
+    "pytest-cov",
+]
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = lint,py36,py37
+skip_missing_interpreters = true
+isolated_build = true
+
+[testenv]
+deps =
+extras = test
+commands = pytest
+
+[testenv:lint]
+deps =
+extras = dev
+commands = flake8
+"""
