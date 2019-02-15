@@ -16,6 +16,9 @@ test = [
     "pytest",
     "pytest-cov",
 ]
+doc = [
+    "sphinx"
+]
 
 [tool.tox]
 legacy_tox_ini = """

@@ -1,5 +1,5 @@
 """
-Create temporary pkg_resources entry points at runtime.
+Create temporary `pkg_resources` entry points at runtime.
 """
 import contextlib
 import pkg_resources
