@@ -28,7 +28,8 @@ def parse_version():
 # -- Project information -----------------------------------------------------
 
 project = 'prybar'
-copyright = '2019 University of Cambridge (via Hal Blackburn)'
+copyright = ('2019 University of Cambridge (via Hal Blackburn) '
+             'and Hal Blackburn')
 author = 'Hal Blackburn'
 
 # The short X.Y version
@@ -93,7 +94,16 @@ html_theme = 'alabaster'
 # documentation.
 #
 html_theme_options = {
-    'description': 'Temporarily create <code>pkg_resources</code> entry points at runtime'
+    'fixed_sidebar': True,
+    'description': (
+        'Temporarily create <code>pkg_resources</code> entry points at '
+        'runtime'),
+    'github_repo': 'prybar',
+    'github_user': 'h4l',
+    'github_button': True,
+    'github_type': 'star',
+    'github_count': True,
+    'github_banner': True,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -109,7 +119,15 @@ html_static_path = ['_static']
 # default: ``['localtoc.html', 'relations.html', 'sourcelink.html',
 # 'searchbox.html']``.
 #
-# html_sidebars = {}
+html_sidebars = {
+    '**': [
+        'about.html',
+        #'navigation.html',
+        #'relations.html',
+        #'searchbox.html',
+        'donate.html',
+    ]
+}
 
 
 # -- Options for HTMLHelp output ---------------------------------------------
