@@ -70,8 +70,38 @@ def test_dynamic_entrypoint_registers_entrypoint_via_decorator():
         assert len(eps) == 1
         assert eps[0].name == 'ep_1'
         assert eps[0].load() is ep_1
+    func()
 
     assert list(pkg_resources.iter_entry_points('test-group')) == []
+
+
+@pytest.mark.parametrize('expected_args', [(), (1, 2, 3)])
+@pytest.mark.parametrize('expected_kwargs', [{}, {'a': 1, 'b': 2}])
+def test_decorator_maintains_arguments(expected_args, expected_kwargs):
+    @dynamic_entrypoint('test-group', ep_1)
+    def func(*args, **kwargs):
+        assert args == expected_args
+        assert kwargs == expected_kwargs
+
+    func(*expected_args, **expected_kwargs)
+
+
+def test_decorator_maintains_return_value():
+    @dynamic_entrypoint('test-group', ep_1)
+    def func():
+        return 42
+
+    assert func() == 42
+
+
+def test_decorator_maintains_raised_exceptions():
+    @dynamic_entrypoint('test-group', ep_1)
+    def func():
+        raise ValueError('foo')
+
+    with pytest.raises(ValueError) as excinfo:
+        func()
+    assert str(excinfo.value) == 'foo'
 
 
 def test_dynamic_entrypoint_registers_entrypoint_via_start():
@@ -246,22 +276,26 @@ def test_cant_use_start_with_context_manager():
 
 def test_cant_use_stop_with_decorator():
     dep = dynamic_entrypoint('test-group', ep_1)
+
     @dep
     def block():
         with pytest.raises(RuntimeError) as excinfo:
             dep.stop()
         assert (str(excinfo.value) ==
                 'can\'t stop() while active via __enter__()')
+    block()
 
 
 def test_cant_use_start_with_decorator():
     dep = dynamic_entrypoint('test-group', ep_1)
+
     @dep
     def block():
         with pytest.raises(RuntimeError) as excinfo:
             dep.start()
         assert (str(excinfo.value) ==
                 'can\'t start() while active via __enter__()')
+    block()
 
 
 def test_cant_use_context_manager_with_start():
@@ -276,7 +310,7 @@ def test_cant_use_context_manager_with_start():
     assert str(excinfo.value) == 'can\'t __enter__() while active via start()'
 
 
-def test_cant_use_context_manager_with_decorator():
+def test_cant_use_decorator_with_start():
     dep = dynamic_entrypoint('test-group', ep_1)
     dep.start()
 

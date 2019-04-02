@@ -76,7 +76,7 @@ class DynamicEntrypoint:
         @wraps(func)
         def with_dynamic_entrypoint(*args, **kwargs):
             with self:
-                func(*args, **kwargs)
+                return func(*args, **kwargs)
         return with_dynamic_entrypoint
 
     def start(self):
