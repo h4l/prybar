@@ -1,6 +1,5 @@
 from unittest.mock import patch
 import contextlib
-import functools
 import pkg_resources
 
 import pytest
@@ -28,7 +27,22 @@ def validate_entrypoint_cleanup():
         pytest.fail('prybar.py in working_set.entries after running a test')
 
 
-nested_ep = None
+class SomeClass:
+
+    class Nested:
+        def method(self):
+            pass
+
+    @staticmethod
+    def func():
+        pass
+
+    @staticmethod
+    def func_without_module(self):
+        pass
+
+
+SomeClass.func_without_module.__module__ = None
 
 
 def ep_1():
@@ -41,12 +55,6 @@ def ep_2():
 
 def ep_3():
     return 3
-
-
-@pytest.yield_fixture(name='nested_ep')
-def create_nested_ep():
-    with patch(f'{__name__}.nested_ep') as ep:
-        yield ep
 
 
 def test_dynamic_entrypoint_registers_entrypoint_via_with():
@@ -170,22 +178,36 @@ def test_entrypoints_are_loadable(func_name):
         assert ep.load() is globals()[func_name]
 
 
-@pytest.mark.parametrize('kwargs, expected_attr_path', [
-    (dict(name='foo', module=__name__, attribute=('nested_ep', 'abc')),
-     ('abc',)),
-    (dict(name='foo', module=__name__, attribute=('nested_ep', 'abc', 'def')),
-     ('abc', 'def')),
+@pytest.mark.parametrize('kwargs, expected', [
+    (dict(name='foo', module=__name__, attribute=('SomeClass', 'func')),
+     SomeClass.func),
+    (dict(name='foo', module=__name__, attribute=('SomeClass', 'Nested')),
+     SomeClass.Nested),
+    (dict(name='foo', module=__name__, attribute=('SomeClass', 'Nested', 'method')),
+     SomeClass.Nested.method),
+    (dict(name='foo', entrypoint=SomeClass.func), SomeClass.func),
+    (dict(name='foo', entrypoint=SomeClass.Nested), SomeClass.Nested),
+    (dict(name='foo', entrypoint=SomeClass.Nested.method),
+     SomeClass.Nested.method),
 ])
 def test_entrypoints_with_multiple_attributes_load_nested_objects(
-        kwargs, expected_attr_path, nested_ep):
+        kwargs, expected):
     with dynamic_entrypoint('test-group', **kwargs):
         ep = next(pkg_resources.iter_entry_points('test-group'))
-        loaded_ep = ep.load()
 
-        expected_nested_ep = functools.reduce(getattr,
-                                              expected_attr_path, nested_ep)
+        assert ep.load() is expected
 
-        assert loaded_ep is expected_nested_ep
+
+def test_callable_entrypoint_must_have_module_attr():
+    assert SomeClass.func_without_module.__module__ is None
+
+    with pytest.raises(ValueError) as excinfo:
+        dynamic_entrypoint('test-group',
+                           entrypoint=SomeClass.func_without_module)
+
+    msg = str(excinfo.value)
+    assert msg.startswith('callable entrypoint has no __module__: ')
+    assert f'SomeClass.func_without_module' in msg
 
 
 @pytest.mark.parametrize('args, kwargs', [

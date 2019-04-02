@@ -258,6 +258,10 @@ def dynamic_entrypoint(
                 raise ValueError(f'callable entrypoint is not '
                                  f'importable: {entrypoint!r}')
 
+            if getattr(entrypoint, '__module__', None) is None:
+                raise ValueError(
+                    f'callable entrypoint has no __module__: {entrypoint!r}')
+
             entrypoint = pkg_resources.EntryPoint(name, entrypoint.__module__,
                                                   attrs=attrs)
         else:
