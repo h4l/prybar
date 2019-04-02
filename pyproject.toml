@@ -30,7 +30,7 @@ isolated_build = true
 [testenv]
 deps =
 extras = test
-commands = pytest
+commands = pytest --doctest-modules --doctest-glob '*.rst'
 
 [testenv:lint]
 deps =
