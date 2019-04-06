@@ -1,0 +1,26 @@
+language: python
+cache: pip
+dist: xenial
+
+install:
+  - pip install "pip>=19"
+  - pip install .[test,dev,doc]
+
+jobs:
+  include:
+    - stage: test
+      script:
+        - pytest --doctest-modules --doctest-glob '*.rst'
+      python: '3.6'
+    - stage: test
+      script:
+        - pytest --doctest-modules --doctest-glob '*.rst'
+      python: '3.7'
+    - stage: test
+      script:
+        - flake8
+      python: '3.7'
+    - stage: test
+      script:
+        - sphinx-build -M html docs/source docs/build -W
+      python: '3.7'
