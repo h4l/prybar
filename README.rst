@@ -3,6 +3,13 @@ prybar: Create temporary ``pkg_resources`` entry points at runtime
 
 .. image:: https://travis-ci.org/h4l/prybar.svg?branch=master
     :target: https://travis-ci.org/h4l/prybar
+    :alt: CI Status
+.. image:: https://readthedocs.org/projects/prybar/badge/?version=latest
+    :target: https://prybar.readthedocs.io/en/latest/
+    :alt: Documentation Status
+.. image:: https://img.shields.io/pypi/status/prybar.svg
+    :target: https://pypi.org/project/prybar/
+    :alt: PyPI - Status
 
 A Python library to temporarily define ``pkg_resources`` `entry points <ep intro_>`_
 at runtime. The primary use case is testing code which works with entry points.
