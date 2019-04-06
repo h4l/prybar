@@ -33,6 +33,8 @@ prybar is available from `PyPi <https://pypi.org/project/prybar/>`_ as ``prybar`
 
     $ pip install prybar
 
+prybar requires Python 3.6 or greater.
+
 Using prybar
 ------------
 
