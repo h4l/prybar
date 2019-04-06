@@ -8,15 +8,21 @@
 
 # -- Path setup --------------------------------------------------------------
 
-# If extensions (or modules to document with autodoc) are in another directory,
-# add these directories to sys.path here. If the directory is relative to the
-# documentation root, use os.path.abspath to make it absolute, like shown here.
-#
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
 import pathlib
 import re
+import sys
+
+
+# If it's not already importable, we add the project root to the
+# sys path so that sphinx can find docstrings in the code.
+#
+# Just installing the package works fine, but readthedocs seems to have
+# a bug which results in installing our package failing when it's cached
+# from a previous install. Not having to install it works around that...
+try:
+    import prybar  # noqa: F401
+except ModuleNotFoundError:
+    sys.path.insert(0, str(pathlib.Path(__file__).parents[2]))
 
 
 def parse_version():
