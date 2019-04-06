@@ -4,6 +4,7 @@ build-backend = "flit.buildapi"
 
 [tool.flit.metadata]
 module = "prybar"
+home-page = "https://github.com/h4l/prybar"
 author = "Hal Blackburn"
 author-email = "hwtb2@cam.ac.uk"
 classifiers = [
