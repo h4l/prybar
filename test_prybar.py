@@ -1,7 +1,6 @@
-from unittest.mock import patch
 import contextlib
-import pkg_resources
 
+import pkg_resources
 import pytest
 
 import prybar
@@ -123,6 +122,52 @@ def test_dynamic_entrypoint_registers_entrypoint_via_start():
     assert eps[0].load() is ep_1
     dep.stop()
 
+    assert list(pkg_resources.iter_entry_points('test-group')) == []
+
+
+def test_entrypoint_can_be_entered_multiple_times():
+    dyn_ep = dynamic_entrypoint('test-group', ep_1)
+
+    def assert_ep_1_active():
+        eps = list(pkg_resources.iter_entry_points('test-group'))
+        assert len(eps) == 1
+        assert eps[0].load() is ep_1
+
+    @dyn_ep
+    def func_with_ep_1_active():
+        assert_ep_1_active()
+
+        # we can enter the context manager again from a decorated function
+        with dyn_ep:
+            assert_ep_1_active()
+
+        # It's still active now, even though this context manager has stopped
+        assert_ep_1_active()
+
+    # Nothing's used the entry point yet, so it doesn't exist
+    assert list(pkg_resources.iter_entry_points('test-group')) == []
+
+    with dyn_ep:
+        assert_ep_1_active()
+
+        # we can use a decorated function with entry point active
+        func_with_ep_1_active()
+
+        # we can enter the manager again
+        with dyn_ep:
+            assert_ep_1_active()
+
+            # We can't use the manual API while a context manager is active
+            with pytest.raises(RuntimeError):
+                dyn_ep.stop()
+
+            with pytest.raises(RuntimeError):
+                dyn_ep.start()
+
+        # and again, it's still active now
+        assert_ep_1_active()
+
+    # Now there are no more users, so it's gone
     assert list(pkg_resources.iter_entry_points('test-group')) == []
 
 
