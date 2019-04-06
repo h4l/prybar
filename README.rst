@@ -25,7 +25,7 @@ Usage
     >>> # Entry point doesn't exist
     >>> list(iter_entry_points('example.hash_types', 'sha256'))
     []
-    >>> # With prybar we can entry points temporarily with a context manager
+    >>> # With prybar's context manager we can create entry points temporarily
     >>> with prybar.dynamic_entrypoint('example.hash_types',
     ...                                name='sha256', module='hashlib'):
     ...     hash = next(iter_entry_points('example.hash_types', 'sha256')).load()
