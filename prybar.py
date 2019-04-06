@@ -16,7 +16,7 @@ class DynamicEntrypoint:
     """
 
     def __init__(self, group: str, entrypoint: pkg_resources.EntryPoint,
-                       working_set: pkg_resources.WorkingSet, scope: str):
+                 working_set: pkg_resources.WorkingSet, scope: str):
         self.__group = group
         self.__entrypoint = entrypoint
         self.__working_set = working_set
@@ -120,7 +120,7 @@ class DynamicEntrypoint:
         # Prevent creating entrypoints in distributions not created by us,
         # otherwise we could remove the distributions when cleaning up.
         if (dist.key in working_set.by_key and
-            working_set.by_key[dist.key].location != __file__):
+                working_set.by_key[dist.key].location != __file__):
             raise ValueError(f'scope {format_scope(scope, dist)} already '
                              f'exists in working set at location '
                              f'{working_set.by_key[dist.key].location}')
@@ -177,7 +177,7 @@ def dynamic_entrypoint(
     :meth:`prybar.dynamic_entrypoint` registers and de-registers
     :mod:`pkg_resources` `entry points`_ at runtime.
 
-    .. _entry points: https://setuptools.readthedocs.io/en/latest/pkg_resources.html#entry-points
+    .. _entry points: https://setuptools.readthedocs.io/en/latest/pkg_resources.html#entry-points  # noqa: E501
 
     It acts as a context manager and function decorator. The entrypoint is
     registered within the ``with`` statement, or while the decorated function
@@ -202,6 +202,7 @@ def dynamic_entrypoint(
 
     The ``group`` must always be provided as a string, but he entrypoint can
     be specified in several ways:
+
       - By providing a ``name`` and ``module``. The target in the module can be
         specified with ``attribute`` if it differs from ``name``.
       - By passing a function or class as ``entrypoint``. The ``name``,

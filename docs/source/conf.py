@@ -25,6 +25,7 @@ def parse_version():
                      (re.match(r"^__version__ = '([^']+)'", l) for l in f)
                      if m is not None), None)
 
+
 # -- Project information -----------------------------------------------------
 
 project = 'prybar'
@@ -121,11 +122,7 @@ html_static_path = ['_static']
 #
 html_sidebars = {
     '**': [
-        'about.html',
-        #'navigation.html',
-        #'relations.html',
-        #'searchbox.html',
-        'donate.html',
+        'about.html'
     ]
 }
 
