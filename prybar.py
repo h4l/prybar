@@ -195,7 +195,8 @@ def dynamic_entrypoint(
     to ``start()``/``stop()`` while a with block or decorated function is
     active, and vice versa.
 
-    The entrypoint can be specified in several ways:
+    The ``group`` must always be provided as a string, but he entrypoint can
+    be specified in several ways:
       - By providing a ``name`` and ``module``. The target in the module can be
         specified with ``attribute`` if it differs from ``name``.
       - By passing a function or class as ``entrypoint``. The ``name``,
@@ -226,9 +227,9 @@ def dynamic_entrypoint(
         to avoid conflicts with entry points from other packages.
     :param working_set: The pkg_resources.WorkingSet to register entrypoints
         in. Defaults to the default pkg_resources.working_set.
-    :return: The context manager/decorator — a
-        :class:`prybar.DynamicEntrypoint`, which also supports ``start()`` and
-        ``stop()`` methods.
+    :return: The context manager/decorator —
+        a :class:`prybar.DynamicEntrypoint`, which also supports ``start()``
+        and ``stop()`` methods.
     """
     if not isinstance(group, str):
         raise TypeError(f'group must be a string, got: {group!r}')
