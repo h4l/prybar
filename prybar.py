@@ -148,6 +148,11 @@ class DynamicEntrypoint:
         finally:
             # Tidy up
             del group_entries[name]
+            # If we re-use this entrypoint (by re-entering the context) the
+            # dist may well have changed (because it gets deleted from the
+            # working set) so we shouldn't remember it.
+            assert entrypoint.dist is dist
+            entrypoint.dist = None
             if len(group_entries) == 0:
                 del dist.get_entry_map()[group]
 

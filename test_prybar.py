@@ -170,6 +170,12 @@ def test_entrypoint_can_be_entered_multiple_times():
     # Now there are no more users, so it's gone
     assert list(pkg_resources.iter_entry_points('test-group')) == []
 
+    # And we can re-activate it again:
+    with dyn_ep:
+        assert_ep_1_active()
+
+    assert list(pkg_resources.iter_entry_points('test-group')) == []
+
 
 def test_multiple_entrypoint_registration():
     names = ['ep_1', 'ep_2', 'ep_3']
