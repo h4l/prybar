@@ -7,7 +7,7 @@ from typing import Union, Type, Callable, Optional
 from functools import wraps
 
 __all__ = ['dynamic_entrypoint']
-__version__ = '1.0.0b1'
+__version__ = '1.0.0b2'
 
 
 class DynamicEntrypoint:
