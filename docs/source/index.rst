@@ -216,7 +216,7 @@ Or a ``pkg_resources.EntryPoint`` object can be passed:
     True
 
 API Reference
---------
+-------------
 
 `prybar`
 ~~~~~~~~
