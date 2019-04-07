@@ -44,3 +44,5 @@ Usage
     >>> # And it's gone again
     >>> list(iter_entry_points('example.hash_types', 'sha256'))
     []
+
+See the `full documentation <https://prybar.readthedocs.io/>`_ for more.
